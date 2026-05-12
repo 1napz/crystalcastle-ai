@@ -1,0 +1,15 @@
+# ใช้ official TensorFlow image เป็น base
+FROM tensorflow/tensorflow:2.15.0
+
+# ตั้ง working directory
+WORKDIR /app
+
+# copy requirements.txt และติดตั้ง dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# copy source code ทั้งหมดเข้า container
+COPY . .
+
+# กำหนด entry point
+CMD ["python", "main.py"]
