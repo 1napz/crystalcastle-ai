@@ -59,4 +59,4 @@
 
 ---
 
-คุณอยากให้ผมช่วยทำ ตัวอย่าง Test Output (เช่นผลลัพธ์ที่ควรเห็นเมื่อรัน container สำเร็จ) เพิ่มเข้าไปใน README-TensorFlow.md ด้วยไหมครับ จะได้เป็น reference เวลา test?
+💡 **หมายเหตุ**: แนะนำให้เพิ่มตัวอย่าง Test Output ใน README-TensorFlow.md เพื่อใช้เป็น reference เวลา test
