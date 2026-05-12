@@ -98,29 +98,8 @@ jobs:
                   repo: context.repo.repo,
                   body: `### 🧩 Auto-Response (CodeRabbit Guide)
 
-**English:**
-CodeRabbit suggests:
-- ${feedback.join("\n- ")}
 
-⚠️ This PR has been open for more than ${thresholdDays} days.
 
-**ไทย:**
-CodeRabbit แนะนำ:
-- ${feedback.join("\n- ")}
-
-⚠️ Pull Request นี้เปิดมานานเกิน ${thresholdDays} วันแล้ว`
-                });
-
-                if (pr.mergeable_state === "clean") {
-                  await github.rest.pulls.merge({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    pull_number: pr.number,
-                    merge_method: "merge"
-                  });
-                }
-              }
-            }
 
       - name: Log & Cleanup Caches
         uses: actions/github-script@v7
