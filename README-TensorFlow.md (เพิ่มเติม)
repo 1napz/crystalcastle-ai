@@ -1,0 +1,77 @@
+จัดให้ครับ ✨  
+นี่คือตัวอย่าง Test Output Section ที่คุณสามารถเพิ่มเข้าไปใน README-TensorFlow.md เพื่อใช้เป็น reference เวลา test container และรัน inference:
+
+---
+
+📄 README-TensorFlow.md (เพิ่มเติม)
+
+`markdown
+
+🧪 Test Output
+
+เมื่อคุณ build และ run container สำเร็จ คำสั่ง:
+`bash
+docker build -t crystalcastle-ai .
+docker run crystalcastle-ai
+`
+
+ควรได้ผลลัพธ์ตัวอย่างประมาณนี้:
+
+`
+Epoch 1/5
+13/13 [==============================] - 1s 20ms/step - loss: 1.0986 - accuracy: 0.33
+Epoch 2/5
+13/13 [==============================] - 0s 18ms/step - loss: 1.0950 - accuracy: 0.36
+Epoch 3/5
+13/13 [==============================] - 0s 17ms/step - loss: 1.0920 - accuracy: 0.38
+Epoch 4/5
+13/13 [==============================] - 0s 17ms/step - loss: 1.0895 - accuracy: 0.40
+Epoch 5/5
+13/13 [==============================] - 0s 17ms/step - loss: 1.0870 - accuracy: 0.42
+
+Prediction: [2]
+`
+
+- ส่วน Epoch แสดงการเทรนโมเดลจาก model.py  
+- ส่วน Prediction: [2] คือผลลัพธ์จาก main.py ที่เรียกใช้ inference.py  
+
+---
+
+🇬🇧 English Version
+
+`markdown
+
+🧪 Test Output
+
+After building and running the container:
+`bash
+docker build -t crystalcastle-ai .
+docker run crystalcastle-ai
+`
+
+You should see output similar to:
+
+`
+Epoch 1/5
+13/13 [==============================] - 1s 20ms/step - loss: 1.0986 - accuracy: 0.33
+Epoch 2/5
+13/13 [==============================] - 0s 18ms/step - loss: 1.0950 - accuracy: 0.36
+Epoch 3/5
+13/13 [==============================] - 0s 17ms/step - loss: 1.0920 - accuracy: 0.38
+Epoch 4/5
+13/13 [==============================] - 0s 17ms/step - loss: 1.0895 - accuracy: 0.40
+Epoch 5/5
+13/13 [==============================] - 0s 17ms/step - loss: 1.0870 - accuracy: 0.42
+
+Prediction: [2]
+`
+
+- Epoch logs show the training process from model.py  
+- Prediction: [2] is the inference result from main.py calling inference.py  
+`
+
+---
+
+แบบนี้ README ของคุณจะมีตัวอย่างผลลัพธ์ที่ชัดเจน ทำให้คนที่ clone repo มาทดสอบสามารถตรวจสอบได้ทันทีว่า workflow ทำงานถูกต้องครับ ✅  
+
+คุณอยากให้ผมช่วยเพิ่ม Section “Troubleshooting” (เช่น error ที่เจอบ่อยเวลาใช้ TensorFlow/Docker และวิธีแก้) เข้าไปใน README-TensorFlow.md ด้วยไหมครับ จะได้ครบทั้ง setup → run → test → debug?
