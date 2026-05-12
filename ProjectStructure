@@ -1,0 +1,13 @@
+crystalcastle-ai/
+├── app/
+│   ├── main.py          # entry point to load model and run inference
+│   ├── inference.py     # prediction logic
+│   └── model.py         # training script (optional)
+│
+├── models/
+│   └── model.h5         # pre-trained model
+│
+├── requirements.txt     # dependencies such as TensorFlow, NumPy
+├── Dockerfile           # container environment setup
+├── README.md            # project documentation
+└── .gitignore           # exclude unnecessary files
