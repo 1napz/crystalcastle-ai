@@ -1,0 +1,62 @@
+จัด Checklist สำหรับการ Review ก่อนกด Merge Pull Request ให้เลยครับ ✅  
+
+---
+
+📋 TensorFlow PR Review Checklist
+
+🔧 Environment & Dependencies
+- requirements.txt  
+  - มี tensorflow==2.15.0 หรือเวอร์ชันที่ต้องการ  
+  - มี libraries ที่จำเป็น เช่น numpy, pandas, matplotlib, scikit-learn  
+  - ไม่มี dependency ที่ซ้ำซ้อนหรือไม่จำเป็น  
+
+- Dockerfile  
+  - ใช้ base image ที่รองรับ TensorFlow (tensorflow/tensorflow:2.15.0)  
+  - ติดตั้ง dependencies จาก requirements.txt  
+  - มี CMD ["python", "app/main.py"] หรือ entry point ที่ถูกต้อง  
+
+---
+
+🧑‍💻 Source Code
+- model.py  
+  - มีฟังก์ชัน buildmodel() และ trainand_save()  
+  - ใช้ model.save("models/model.h5") เพื่อบันทึกโมเดล  
+
+- main.py  
+  - โหลดโมเดลด้วย tf.keras.models.load_model("models/model.h5")  
+  - มีตัวอย่าง input และเรียกใช้ predict() จาก inference.py  
+
+- inference.py  
+  - มีฟังก์ชัน predict(model, input_data)  
+  - ใช้ model.predict() และคืนค่าผลลัพธ์ที่ชัดเจน  
+
+---
+
+📄 Documentation
+- README-TensorFlow.md  
+  - อธิบายโครงสร้าง repo bilingual (ไทย/อังกฤษ)  
+  - มีขั้นตอนการใช้งาน: clone → install → train → run inference  
+  - มี Workflow Diagram (Training → Save Model → Inference → Deploy)  
+
+---
+
+🧪 Testing
+- Build Docker image สำเร็จ:  
+  `bash
+  docker build -t crystalcastle-ai .
+  `
+- Run container สำเร็จ:  
+  `bash
+  docker run crystalcastle-ai
+  `
+- Output แสดงผลการทำนายจาก main.py ได้จริง  
+
+---
+
+✅ สรุป
+ถ้า Checklist ทั้งหมดผ่าน → กด Merge Pull Request ได้เลยครับ  
+ถ้ามีข้อไหนยังไม่ครบ เช่น TensorFlow ยังไม่ถูกใส่ใน requirements.txt หรือ Dockerfile ยังไม่ชัดเจน → ควรแก้ไขก่อน merge  
+
+---
+
+💡 **หมายเหตุ**: แนะนำให้เพิ่มตัวอย่าง Test Output ใน README-TensorFlow.md เพื่อใช้เป็น reference เวลา test
