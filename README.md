@@ -14,10 +14,3 @@ This repository is a tool layer for:
 
 ---
 
-## ⚙️ Getting Started
-
-```bash
-git clone https://github.com/1napz/crystalcastleai.git
-cd crystalcastleai
-npm install
-npm run dev
