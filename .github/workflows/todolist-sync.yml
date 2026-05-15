@@ -1,0 +1,21 @@
+name: Todoist Sync
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  create-task:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create Todoist Task
+        run: |
+          curl https://api.todoist.com/rest/v2/tasks \
+            -X POST \
+            -H "Authorization: Bearer ${{ secrets.TODOIST_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "content": "Review PR #${{ github.event.pull_request.number }}",
+              "description": "${{ github.event.pull_request.title }}"
+            }'
