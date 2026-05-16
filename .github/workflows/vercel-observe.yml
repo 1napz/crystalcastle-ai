@@ -1,0 +1,4 @@
+# List workflow runs (opens Vercel dashboard)
+npx workflow inspect runs --backend vercel
+# Launch the web UI (opens Vercel dashboard)
+npx workflow web --backend vercel
