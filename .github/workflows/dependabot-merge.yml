@@ -1,10 +1,11 @@
-# .github/workflows/dependabot-merge.yml
-name: dependentbot[bot]
+⚙️ Workflow: .github/workflows/dependabot-merge.yml
+
+name: Dependabot Auto Merge
 
 on:
   pull_request:
-    types: dependentbot[bot]
-workflow_dispatch:
+    types: [labeled]
+  workflow_dispatch:
 
 permissions:
   pull-requests: write
@@ -12,11 +13,39 @@ permissions:
 
 jobs:
   auto-merge:
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.label.name == 'automerge'
+    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge')
     runs-on: ubuntu-latest
     steps:
       - name: Enable auto-merge
         run: gh pr merge --auto --merge "$PR_URL"
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRURL: ${{ github.event.pullrequest.html_url }}
+          GITHUBTOKEN: ${{ secrets.GITHUBTOKEN }}
+`
+
+---
+
+⚙️ Dependabot Config: .github/dependabot.yml
+`yaml
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "direct"
+    commit-message:
+      prefix: "deps(pip):"
+      include: "scope"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps(actions):"
+      include: "scope"
+`
+
+---
