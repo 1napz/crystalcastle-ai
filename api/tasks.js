@@ -3,11 +3,9 @@ export default async function handler(req, res) {
   const { platform, ...data } = req.body;
   
   switch(platform) {
-    case 'clickup':
-      // สร้าง ClickUp task
+    case 'ClickUp':
       break;
-    case 'asana':
-      // สร้าง Asana task
+    case 'Asana':
       break;
     default:
       return res.status(400).json({ error: 'Unknown platform' });
