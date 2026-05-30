@@ -2,7 +2,7 @@
 
 📄 README-TensorFlow.md
 
-`markdown
+```markdown
 
 crystalcastle-ai (TensorFlow Edition)
 
@@ -12,7 +12,7 @@ crystalcastle-ai (TensorFlow Edition)
 ---
 
 🔧 โครงสร้างไฟล์
-`
+```
 crystalcastle-ai/
 ├── app/
 │   ├── main.py          # โหลดโมเดลและรัน inference
@@ -26,35 +26,35 @@ crystalcastle-ai/
 ├── Dockerfile           # สร้าง container environment
 ├── README-TensorFlow.md # เอกสารนี้
 └── .gitignore           # กันไฟล์ไม่จำเป็น
-`
+```
 
 ---
 
 🚀 วิธีใช้งาน
 1. Clone repo  
-   `bash
+   ```bash
    git clone https://github.com/1napz/crystalcastle-ai.git
    cd crystalcastle-ai
-   `
+   ```
 2. ติดตั้ง dependencies  
-   `bash
+   ```bash
    pip install -r requirements.txt
-   `
+   ```
 3. เทรนโมเดลใหม่  
-   `bash
+   ```bash
    python app/model.py
-   `
+   ```
 4. รัน inference  
-   `bash
+   ```bash
    python app/main.py
-   `
+   ```
 
 ---
 
 🧑‍💻 Training the Model
 ตัวอย่าง model.py สำหรับการสร้างและบันทึกโมเดลใหม่:
 
-`python
+```python
 import tensorflow as tf
 from tensorflow.keras import layers
 
@@ -80,12 +80,12 @@ def trainandsave():
 
 if name == "main":
     trainandsave()
-`
+```
 
 ---
 
 🔮 Workflow Diagram
-`
+```
 [Training Data] → [model.py] → [Train Model] → [Save model.h5]
        ↓
 [main.py] → [Load model.h5] → [inference.py] → [Predict Output]
@@ -107,22 +107,22 @@ This project uses TensorFlow for building, training, and running inference with 
 
 🚀 Usage
 1. Clone repo  
-   `bash
+   ```bash
    git clone https://github.com/1napz/crystalcastle-ai.git
    cd crystalcastle-ai
-   `
+   ```
 2. Install dependencies  
-   `bash
+   ```bash
    pip install -r requirements.txt
-   `
+   ```
 3. Train new model  
    `bash
    python app/model.py
-   `
+   ```
 4. Run inference  
-   `bash
+   ```bash
    python app/main.py
-   `
+   ```
 
 ---
 
