@@ -1,0 +1,56 @@
+name: Auto update lockfile & weekly deps
+
+on:
+  push:
+    paths:
+      - 'package.json'
+  schedule:
+    - cron: '0 0 * * 1' # ทุกวันจันทร์ 00:00 UTC
+
+jobs:
+  update-lockfile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm install --package-lock-only
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: 'package-lock.json'
+          message: 'chore: update lockfile'
+
+      - run: npm update
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: '.'
+          message: 'chore: weekly npm update'
+
+      - uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore: update lockfile & weekly deps'
+          title: 'chore: update lockfile & weekly deps'
+          body: 'Auto-generated lockfile sync and weekly dependency update'
+          branch: auto/update-lockfile-weekly
+
+      # 🔔 สร้าง ClickUp task ใหม่ + assign ให้หลายคน
+      - name: Create ClickUp Task
+        run: |
+          curl -X POST "https://api.clickup.com/api/v2/list/${{ secrets.CLICKUP_LIST_ID }}/task" \
+          -H "Authorization: ${{ secrets.CLICKUP_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "name": "Lockfile & weekly deps update",
+            "description": "✅ Lockfile & weekly deps updated! Check PR: '${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.number }}'",
+            "status": "to do",
+            "priority": 2,
+            "assignees": [${{ secrets.CLICKUP_ASSIGNEE_ID_1 }}, ${{ secrets.CLICKUP_ASSIGNEE_ID_2 }}, ${{ secrets.CLICKUP_ASSIGNEE_ID_3 }}]
+          }'
