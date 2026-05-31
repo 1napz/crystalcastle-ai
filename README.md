@@ -1,141 +1,173 @@
----
+# crystalcastle-ai
 
-📄 README-TensorFlow.md
+Runner AI powered by CrystalCastle · TensorFlow Edition
 
-```markdown
-
-crystalcastle-ai (TensorFlow Edition)
-
-🇹🇭 คำอธิบาย (Thai)
-โปรเจกต์นี้ใช้ TensorFlow สำหรับการสร้างโมเดล, การเทรน และการทำ Inference โดยมีการจัดการ environment ผ่าน requirements.txt และ Dockerfile เพื่อให้ reproducible ได้ง่าย
+> โปรเจกต์ต้นแบบสำหรับสร้าง, เทรน, และรัน inference โมเดล TensorFlow แบบ reproducible ด้วย Docker
 
 ---
 
-🔧 โครงสร้างไฟล์
+## 🇹🇭 ภาพรวม
+
+crystalcastle-ai เป็นโครงสร้างเริ่มต้นสำหรับงาน ML ขนาดเล็กถึงกลาง
+- สร้างโมเดลด้วย Keras
+- แยกชัดระหว่าง `model.py` (train), `inference.py` (predict), `main.py` (entrypoint)
+- รันได้ทั้งบนเครื่อง local และใน Docker container
+
+**ใช้ทำอะไร:** ตัวอย่างใน repo นี้เป็น classifier 3 คลาส รับ input vector ขนาด 10 — ปรับ `input_shape` และจำนวนคลาสได้ตามงานของคุณ (เช่น Runner AI สำหรับวิเคราะห์ท่าทาง, sensor data)
+
+---
+
+## 📁 โครงสร้าง
+
 ```
 crystalcastle-ai/
 ├── app/
-│   ├── main.py          # โหลดโมเดลและรัน inference
-│   ├── inference.py     # logic สำหรับการทำนาย
-│   └── model.py         # สร้างและเทรนโมเดล
-│
+│   ├── main.py        # โหลดโมเดลและรัน inference
+│   ├── inference.py   # logic การทำนาย
+│   └── model.py       # สร้างและเทรนโมเดล
 ├── models/
-│   └── model.h5         # โมเดลที่เทรนแล้ว
-│
-├── requirements.txt     # dependencies เช่น TensorFlow, NumPy
-├── Dockerfile           # สร้าง container environment
-├── README-TensorFlow.md # เอกสารนี้
-└── .gitignore           # กันไฟล์ไม่จำเป็น
+│   └── model.keras    # โมเดลที่เทรนแล้ว (จะถูกสร้างหลัง train)
+├── requirements.txt
+├── Dockerfile
+└── README.md
 ```
 
 ---
 
-🚀 วิธีใช้งาน
-1. Clone repo  
-   ```bash
-   git clone https://github.com/1napz/crystalcastle-ai.git
-   cd crystalcastle-ai
-   ```
-2. ติดตั้ง dependencies  
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. เทรนโมเดลใหม่  
-   ```bash
-   python app/model.py
-   ```
-4. รัน inference  
-   ```bash
-   python app/main.py
-   ```
+## 🚀 Quick Start
+
+1. Clone
+```bash
+git clone https://github.com/Zyntro-Media-AI/crystalcastle-ai.git
+cd crystalcastle-ai
+```
+
+2. ติดตั้ง
+```bash
+pip install -r requirements.txt
+```
+
+3. เทรนโมเดลตัวอย่าง
+```bash
+python app/model.py
+```
+
+4. รัน inference
+```bash
+python app/main.py
+```
 
 ---
 
-🧑‍💻 Training the Model
-ตัวอย่าง model.py สำหรับการสร้างและบันทึกโมเดลใหม่:
+## 🧑‍💻 Training
 
+`app/model.py`
 ```python
 import tensorflow as tf
 from tensorflow.keras import layers
+import numpy as np
 
-def build_model():
+def build_model(input_dim=10, num_classes=3):
     model = tf.keras.Sequential([
-        layers.Dense(64, activation='relu', input_shape=(10,)),
+        layers.Dense(64, activation='relu', input_shape=(input_dim,)),
         layers.Dense(32, activation='relu'),
-        layers.Dense(3, activation='softmax')
+        layers.Dense(num_classes, activation='softmax')
     ])
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
     return model
 
-def trainandsave():
-    import numpy as np
-    X = np.random.rand(100, 10)
-    y = tf.keras.utils.tocategorical(np.random.randint(3, size=(100,)), numclasses=3)
-
+def train_and_save():
+    X = np.random.rand(500, 10)
+    y = tf.keras.utils.to_categorical(np.random.randint(3, size=(500,)), num_classes=3)
+    
     model = build_model()
-    model.fit(X, y, epochs=5, batch_size=8)
-    model.save("models/model.h5")
+    model.fit(X, y, epochs=10, batch_size=32, validation_split=0.2)
+    model.save("models/model.keras")
 
-if name == "main":
-    trainandsave()
+if __name__ == "__main__":
+    train_and_save()
+```
+
+> เปลี่ยน `X, y` เป็น dataset จริงของคุณ
+
+---
+
+## 🔮 Inference
+
+`app/inference.py`
+```python
+import numpy as np
+import tensorflow as tf
+
+def load_model(path="models/model.keras"):
+    return tf.keras.models.load_model(path)
+
+def predict(model, data: np.ndarray):
+    return model.predict(data)
+```
+
+`app/main.py`
+```python
+from inference import load_model, predict
+import numpy as np
+
+model = load_model()
+sample = np.random.rand(1, 10)  # แทนด้วยข้อมูลจริง
+pred = predict(model, sample)
+print("Prediction:", pred.argmax(axis=1))
 ```
 
 ---
 
-🔮 Workflow Diagram
+## 🐳 Docker
+
+```bash
+docker build -t crystalcastle-ai .
+docker run --rm -it crystalcastle-ai python app/main.py
 ```
-[Training Data] → [model.py] → [Train Model] → [Save model.h5]
-       ↓
-[main.py] → [Load model.h5] → [inference.py] → [Predict Output]
-       ↓
-[Deploy via Dockerfile] → [Containerized Inference]
-`
 
 ---
 
-🇬🇧 Description (English)
-This project uses TensorFlow for building, training, and running inference with machine learning models. Environment reproducibility is ensured via requirements.txt and Dockerfile.
+## 🗺️ Workflow
+
+[Training Data] → model.py → model.keras → main.py → inference.py → Predict
 
 ---
 
-🔧 Project Structure
-(same as above)
+## 🇬🇧 English Overview
+
+crystalcastle-ai is a minimal TensorFlow starter for building, training, and serving models reproducibly.
+
+**Features**
+- Clean separation of training and inference
+- Dockerfile for consistent environments
+- Easy to adapt: change `input_shape` and classes
+
+**Usage** — same commands as Thai section above.
+
+**Train**
+```python
+# see Thai section for full code
+model.save("models/model.keras")
+```
+
+**Inference**
+```python
+model = tf.keras.models.load_model("models/model.keras")
+pred = model.predict(your_data)
+```
 
 ---
 
-🚀 Usage
-1. Clone repo  
-   ```bash
-   git clone https://github.com/1napz/crystalcastle-ai.git
-   cd crystalcastle-ai
-   ```
-2. Install dependencies  
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Train new model  
-   `bash
-   python app/model.py
-   ```
-4. Run inference  
-   ```bash
-   python app/main.py
-   ```
+## 📌 TODO
+- [ ] เพิ่มตัวอย่าง dataset จริง
+- [ ] API endpoint ด้วย FastAPI
+- [ ] เพิ่ม tests และ GitHub Actions
+- [ ] ใส่ LICENSE (MIT แนะนำ)
 
 ---
-
-🧑‍💻 Training the Model
-(same as Thai section)
-
----
-
-🔮 Workflow Diagram
-(same as Thai section)
-`
-
----
-
-แบบนี้ README-TensorFlow.md จะช่วยให้ repo ของคุณชัดเจนว่าเป็นโปรเจกต์ที่ใช้ TensorFlow ทั้ง training และ inference ครับ ✅  
-
+Made with ❤️ by Zyntro-Media-AI
