@@ -1,0 +1,99 @@
+```yaml
+name: 🚨 Security & Env Leak Check
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  leak-detection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # ดึงประวัติทั้งหมดมาตรวจ
+
+      - name: 🔍 Check for .env.local leak
+        run: |
+          if git ls-files | grep -E ".env.local$|.env$"; then
+            echo "❌ ERROR: พบไฟล์ความลับ หลุดขึ้นมาบนระบบ Git!"
+            echo "กรุณารันคำสั่ง 'git rm --cached .env.local' ในเครื่องของคุณ แล้วใช้วิธีสลับ .gitignore ก่อน Push"
+            exit 1
+          else
+            echo "✅ 不พบไฟล์ .env หลุดรอด ระบบปลอดภัย!"
+          fi
+
+      - name: 🔒 Verify Active Gitignore Mode
+        run: |
+          if grep -q "🚨 SECURITY" .gitignore; then
+            echo "🟢 ยืนยัน: ปัจจุบันระบบใช้ .gitignore โหมด Secure อยู่"
+          else
+            echo "⚠️ คำเตือน: ปัจจุบันระบบเปิดโหมด Dev ไว้ แต่ไม่มีไฟล์ลับหลุดขึ้นมา (ผ่านครึ่งทาง)"
+          fi
+```
+
+---
+
+### 📄 เนื้อหาไฟล์ `.github/workflows/gitignore-monitor.yml`
+*(ระบบบันทึก Log และแจ้งเตือนเมื่อมีการแก้ไขโครงสร้างการ Ignore ไฟล์)*
+
+```yaml
+name: 🚨 Gitignore Change Monitor & Alert
+
+on:
+  push:
+    paths:
+      - '.gitignore' # ทำงานเฉพาะเมื่อไฟล์ .gitignore ถูกแก้ไขเท่านั้น
+
+jobs:
+  audit-and-alert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # ดึงประวัติย้อนหลัง 2 Commit เพื่อดูความเปลี่ยนแปลง
+
+      - name: 📝 Generate Action Logging (Diff)
+        id: git_diff
+        run: |
+          echo "==== GITIGNORE CHANGE LOG ====" > change_log.txt
+          echo "Author: ${{ github.actor }}" >> change_log.txt
+          echo "Commit: ${{ github.sha }}" >> change_log.txt
+          echo "Date: $(date +'%Y-%m-%d %H:%M:%S')" >> change_log.txt
+          echo "------------------------" >> change_log.txt
+          git diff HEAD^ HEAD .gitignore >> change_log.txt
+          echo "========================" >> change_log.txt
+          
+          cat change_log.txt
+          CLEAN_DIFF=$(git diff HEAD^ HEAD .gitignore | jq -sRr @json)
+          echo "diff_content=$CLEAN_DIFF" >> $GITHUB_OUTPUT
+
+      - name: 🤖 Send Alert to Gemini Chat
+        if: always()
+        run: |
+          curl --X POST -H 'Content-Type: application/json; charset=UTF-8' \
+          "${{ secrets.GEMINI_CHAT_WEBHOOK }}" \
+          -d '{
+            "text": "🚨 *แจ้งเตือนการแก้ไขไฟล์ .gitignore*\n👤 *โดย:* ${{ github.actor }}\n📌 *Commit:* ${{ github.sha }}\n📝 *รายละเอียดการเปลี่ยนแปลง:* \n```\n'${{ steps.git_diff.outputs.diff_content }}'\n```"
+          }'
+
+      - name: ✉️ Send Email to Owner
+        if: always()
+        uses: sendgrid/sendgrid-action@v1
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        with:
+          mail_to: 'owner@example.com'
+          mail_from: 'alerts@yourdomain.com'
+          mail_subject: '🚨 Alert: .gitignore has been modified by ${{ github.actor }}'
+          mail_text: |
+            มีระบบตรวจพบการแก้ไขไฟล์ .gitignore ในโปรเจกต์ของคุณ
+            รายละเอียดการตรวจสอบอยู่ที่ลิงก์: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+```
+
+---
+
