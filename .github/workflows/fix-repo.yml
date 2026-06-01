@@ -1,0 +1,48 @@
+```yaml
+name: 🛠 Fix Long Filename & Update Node 24
+
+on:
+  workflow_dispatch: # เปิดให้กดรันด้วยตนเองเพื่อแก้ปัญหา [3]
+
+env:
+  # บังคับใช้ Node.js 24 ตามคำแนะนำของ GitHub เพื่อรองรับอนาคต [2]
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true 
+
+jobs:
+  cleanup-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4 # ใช้เวอร์ชันล่าสุดที่รองรับ Node 24 [2]
+
+      - name: 🟢 Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24' # กำหนดเวอร์ชันเป็น 24 ตามต้องการ
+
+      - name: 🗑 Delete Long Filename File
+        run: |
+          # ลบไฟล์เจ้าปัญหาที่เป็นต้นเหตุของ Error: cannot create directory [2]
+          FILE_NAME="Done — I cleaned up your notes and filled in the missing GraphQL + Actions code.Logging.md"
+          if [ -f "$FILE_NAME" ]; then
+            rm "$FILE_NAME"
+            echo "✅ ลบไฟล์สำเร็จ"
+          else
+            echo "❓ ไม่พบไฟล์ดังกล่าว หรือถูกลบไปแล้ว"
+          fi
+
+      - name: ⬆️ Commit and Push Changes
+        run: |
+          git config --global user.name "Zyntro Automation"
+          git config --global user.email "automation@zyntro.ai"
+          git add .
+          git commit -m "fix: remove excessively long filename to resolve CI/CD exit code 128" || echo "No changes to commit"
+          git push
+```
+
+### คำอธิบายการแก้ไขสำคัญ:
+1.  **การบังคับใช้ Node.js 24:** ผมได้เพิ่มตัวแปรสภาพแวดล้อม `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` ตามคำแนะนำของ GitHub เพื่อให้มั่นใจว่า Action จะรันบนสภาพแวดล้อมใหม่และไม่ติดปัญหา Deprecation ในอนาคต [2]
+2.  **การลบไฟล์ชื่อยาว:** สคริปต์จะเจาะจงลบไฟล์ **"Done — I cleaned up your notes..."** ซึ่งเป็นตัวที่ทำให้ Git ไม่สามารถสร้าง Directory ได้ขณะทำการ Checkout [2]
+3.  **ความปลอดภัย:** ใช้ `workflow_dispatch` เพื่อให้คุณควบคุมการรันได้ด้วยตนเอง (Manual trigger) ซึ่งปลอดภัยกว่าการปล่อยให้รันอัตโนมัติในขณะที่โครงสร้างไฟล์ยังมีปัญหาอยู่ [3]
+
+เมื่อคุณรัน Workflow นี้สำเร็จแล้ว ระบบ **🚀 Post-Merge CI/CD** เดิมที่มีปัญหาควรจะสามารถกลับมาทำงานได้ตามปกติครับ [4], [1] หากต้องการให้ปรับเปลี่ยนชื่อไฟล์แทนการลบ แจ้งได้เลยนะครับ!
