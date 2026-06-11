@@ -3,10 +3,14 @@ name: Auto Create Pull Request
 on:
   push:
     branches:
-      - main   # trigger ทุกครั้งที่ commit เข้า main
+      - main
+      - develop
+      - 'release/*'
+      - 'hotfix/*'
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   auto-pr:
@@ -15,12 +19,22 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
+      - name: Run Tests
+        run: |
+          pip install -r requirements.txt
+          pytest --maxfail=1 --disable-warnings -q
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           commit-message: "chore: auto PR after commit"
           title: "Auto PR - Commit Trigger"
           body: |
-            ✅ Pull Request สร้างอัตโนมัติหลัง commit
-            - Triggered by push to main
-          branch: auto/commit-pr
+            ✅ Auto-generated PR after commit
+            - Triggered by push to ${{ github.ref_name }}
+            - Governance checks passed
+            ---
+            📋 รายงานภาษาไทย:
+            - ผ่าน CI/CD checks
+            - รวม config ตาม Governance Flow
+          branch: auto/pr-${{ github.sha }}
