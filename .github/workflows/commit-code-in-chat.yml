@@ -1,0 +1,22 @@
+name: Create Pull Request (Dashboard Trigger)
+
+on:
+  workflow_dispatch:   # Trigger จากปุ่มใน Dashboard
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: auto PR from Governance Dashboard"
+          title: "Auto PR - Chat Session"
+          body: |
+            ✅ Pull Request สร้างจาก Governance Dashboard
+            - Triggered by Chat → Commit → Dashboard
+            - รวม config ที่คุยค้างไว้
+          branch: auto/dashboard-pr
