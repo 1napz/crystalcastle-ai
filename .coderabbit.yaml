@@ -1,35 +1,26 @@
-version: 2
+# .coderabbit.yaml
+reviews:
+  # Instruct CodeRabbit to strictly enforce the CrystalCastle Design System
+  path_instructions:
+    - path: "src/components/**/*.{js,jsx,ts,tsx}"
+      instructions: |
+        You are reviewing code for the CrystalCastle project. 
+        Strictly enforce the rules defined in the root `CLAUDE.md` file.
+        
+        When reviewing component files, check for:
+        1. CSS-in-JS Pattern: Ensure CSS is defined as a template literal string at the top of the file and injected via `<style>{style}</style>`. No CSS modules or Tailwind allowed.
+        2. Design Tokens: Ensure colors use `rgba()` for transparency (e.g., `rgba(255,255,255,0.03)`), NEVER hex with opacity suffixes.
+        3. Typography: Ensure 'Syne' is used for UI text and 'JetBrains Mono' for data/logs.
+        4. Naming Conventions: Ensure CSS classes follow BEM-lite (e.g., `.item-status`, `.status-done`).
+        5. No `any`: Ensure TypeScript props are strictly typed and `any` is not used.
 
-instructions:
-  default_comment_style: concise
-  comment_format_v2: |
-    ⚠️ Issue: {{issue}}
-    👉 Action Required: {{suggestion}}
-    📂 File: {{file}}
+  # Enforce your bilingual commit convention
+  commit_guidelines:
+    - "Commit messages must follow the bilingual format: 'type: english description / คำอธิบายภาษาไทย'"
+    - "Allowed types: feat, fix, chore, docs, style, refactor, test, ci"
 
-  comment_format_v1: |
-    🚨 High Risk Detected
-    File: {{file}}
-    Issue: {{issue}}
-    Details: {{details}}
-    Suggested Fix: {{suggestion}}
-    Impact: {{impact}}
-    Reviewer Notes: Manual check required
-
-rules:
-  - id: concise-comments
-    description: "Default concise actionable comments"
-    severity: minor
-    enforce:
-      files: ["**/*"]
-    suggest:
-      - "Summarize actionable fix in checklist form"
-
-  - id: high-risk-comments
-    description: "Switch to verbose Version1 format for high risk issues"
-    severity: critical
-    match:
-      - pattern: "security|token|license|compliance|unsafe"
-    enforce:
-      files: ["**/*"]
-    instructions: "Use comment_format_v1 for high risk findings"
+# MCP Configuration (if managing via YAML instead of Dashboard)
+mcp_servers:
+  - name: "figma"
+    # CodeRabbit will use the context from CLAUDE.md when querying this server
+    instructions: "Use the CrystalCastle design tokens and mapping rules defined in CLAUDE.md when translating Figma frames to React components."
