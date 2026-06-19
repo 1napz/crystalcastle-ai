@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CrystalCastle AI — Turn ideas into videos in seconds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cc-dark: #141413;
+    --cc-light: #faf9f5;
+    --cc-gray-mid: #b0aea5;
+    --cc-gray-light: #e8e6dc;
+    --cc-orange: #d97757;
+    --cc-blue: #6a9bcc;
+    --cc-green: #788c5d;
+    --bg: #faf9f5;
+    --bg-secondary: #f0ede6;
+    --text: #141413;
+    --text-secondary: #6b6a66;
+    --border: rgba(20,20,19,0.12);
+    --border-med: rgba(20,20,19,0.22);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1917;
+      --bg-secondary: #222220;
+      --text: #faf9f5;
+      --text-secondary: #a0a09a;
+      --border: rgba(250,249,245,0.1);
+      --border-med: rgba(250,249,245,0.2);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ─── NAV ─── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg);
+  }
+
+  .logo {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .nav-cta {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 16px;
+    background: var(--cc-orange);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 3rem 1.5rem 2.5rem;
+  }
+
+  .eyebrow {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--cc-orange);
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--cc-orange);
+  }
+
+  .hero-body {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 340px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
+    background: var(--cc-dark);
+    color: var(--cc-light);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .btn-primary { background: var(--cc-light); color: var(--cc-dark); }
+  }
+
+  .btn-secondary {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
+    background: transparent;
+    color: var(--text);
+    border: 0.5px solid var(--border-med);
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* ─── PIPELINE VISUAL ─── */
+  .hero-visual {
+    margin-top: 2rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    background: var(--bg-secondary);
+    padding: 1.25rem;
+  }
+
+  .pipeline-label {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .pipeline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .p-node {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .p-node.input   { background: #e8e6dc; color: #444441; }
+  .p-node.ai      { background: #d97757; color: #fff; }
+  .p-node.video   { background: #6a9bcc22; color: var(--cc-blue); border: 0.5px solid var(--cc-blue); }
+  .p-node.output  { background: #788c5d22; color: var(--cc-green); border: 0.5px solid var(--cc-green); }
+
+  .p-arrow { color: var(--text-secondary); font-size: 14px; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 1.25rem;
+  }
+
+  .stat-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .stat-num {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cc-orange);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* ─── SECTIONS ─── */
+  .section {
+    padding: 2.5rem 1.5rem;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .section-label {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--cc-orange);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 1.75rem;
+  }
+
+  /* ─── FEATURES ─── */
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .feature-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .feature-icon.orange { background: #d9775720; color: var(--cc-orange); }
+  .feature-icon.blue   { background: #6a9bcc20; color: var(--cc-blue); }
+  .feature-icon.green  { background: #788c5d20; color: var(--cc-green); }
+
+  .feature-title {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  /* ─── INTEGRATIONS ─── */
+  .integrations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 1.25rem;
+  }
+
+  .int-badge {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 0.5px solid var(--border);
+  }
+
+  /* ─── PRICING ─── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .toggle-label {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .toggle-label.active { color: var(--text); }
+
+  .toggle-track {
+    width: 40px;
+    height: 22px;
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border-med);
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .toggle-track.yearly { background: var(--cc-orange); border-color: var(--cc-orange); }
+
+  .toggle-thumb {
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: left 0.2s;
+  }
+
+  .toggle-track.yearly .toggle-thumb { left: 21px; }
+
+  .save-badge {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    background: #788c5d22;
+    color: #788c5d;
+    border-radius: 4px;
+    border: 0.5px solid #788c5d55;
+  }
+
+  .plans {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .plan-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    position: relative;
+  }
+
+  .plan-card.featured { border: 2px solid var(--cc-orange); }
+
+  .popular-badge {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 14px;
+    background: var(--cc-orange);
+    color: #fff;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .plan-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  .plan-name {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .plan-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+
+  .plan-price { text-align: right; }
+
+  .price-amt {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .price-amt span {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+
+  .price-orig {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-decoration: line-through;
+    text-align: right;
+    margin-top: 2px;
+    display: none;
+  }
+
+  .plan-divider {
+    height: 0.5px;
+    background: var(--border);
+    margin: 0.75rem 0;
+  }
+
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .check-orange { color: var(--cc-orange); font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .check-gray   { color: var(--text-secondary); font-size: 15px; flex-shrink: 0; margin-top: 1px; opacity: 0.4; }
+
+  .plan-btn {
+    width: 100%;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 0.5px solid var(--border-med);
+    background: transparent;
+    color: var(--text);
+    transition: background 0.15s;
+  }
+
+  .plan-btn:hover { background: var(--bg-secondary); }
+
+  .plan-btn.primary {
+    background: var(--cc-orange);
+    color: #fff;
+    border-color: var(--cc-orange);
+  }
+
+  .plan-btn.primary:hover { background: #c9674a; }
+
+  .enterprise-note {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .ent-icon { font-size: 22px; color: var(--cc-blue); flex-shrink: 0; margin-top: 2px; }
+
+  .ent-title {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .ent-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .ent-link {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cc-orange);
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    margin-top: 4px;
+    display: block;
+    text-decoration: none;
+  }
+
+  /* ─── CTA / WAITLIST ─── */
+  .cta-section {
+    padding: 2.5rem 1.5rem;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-secondary);
+    text-align: center;
+  }
+
+  .cta-title {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .waitlist-row {
+    display: flex;
+    gap: 8px;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .waitlist-row input {
+    flex: 1;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    padding: 10px 12px;
+    border: 0.5px solid var(--border-med);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+  }
+
+  .waitlist-row input:focus { border-color: var(--cc-orange); }
+
+  .waitlist-btn {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 18px;
+    background: var(--cc-orange);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .thanks-msg {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--cc-green);
+    font-weight: 500;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    padding: 1.5rem;
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footer-logo {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .footer-copy {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  /* ─── ICON font (Tabler via CDN) ─── */
+  .icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="logo">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <polygon points="11,2 20,8 17,18 5,18 2,8" fill="#d97757" opacity="0.15"/>
+      <polygon points="11,2 20,8 17,18 5,18 2,8" fill="none" stroke="#d97757" stroke-width="1.5"/>
+      <polygon points="11,2 6,8 11,13 16,8" fill="#d97757" opacity="0.65"/>
+    </svg>
+    CrystalCastle AI
+  </a>
+  <a href="#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="eyebrow">AI Creative Pipeline</p>
+  <h1 class="hero-title">Turn ideas into<br><em>videos in seconds</em></h1>
+  <p class="hero-body">CrystalCastle AI automates the full creative pipeline — from prompt to finished video — using state-of-the-art models for image, audio, and motion generation.</p>
+  <div class="hero-actions">
+    <a href="#features" class="btn-primary">&#9654; See how it works</a>
+    <a href="#integrations" class="btn-secondary">View integrations</a>
+  </div>
+
+  <div class="hero-visual">
+    <p class="pipeline-label">Live pipeline</p>
+    <div class="pipeline">
+      <span class="p-node input">Prompt</span>
+      <span class="p-arrow">→</span>
+      <span class="p-node ai">Groq LLM</span>
+      <span class="p-arrow">→</span>
+      <span class="p-node ai">FAL / RunwayML</span>
+      <span class="p-arrow">→</span>
+      <span class="p-node output">MP4</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">&lt;30s</div>
+        <div class="stat-label">avg. generation time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">7+</div>
+        <div class="stat-label">AI models connected</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <p class="section-label">Features</p>
+  <h2 class="section-title">Everything in one pipeline</h2>
+  <div class="features-list">
+    <div class="feature-item">
+      <div class="feature-icon orange">&#10024;</div>
+      <div>
+        <p class="feature-title">Prompt-to-video automation</p>
+        <p class="feature-desc">Write a prompt, get a finished video. No manual editing, no stitching tools together by hand.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon blue">&#9881;</div>
+      <div>
+        <p class="feature-title">Multi-model orchestration</p>
+        <p class="feature-desc">Groq, FAL, RunwayML, Pika, and Gemini all run in sequence — the right model for each step.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon green">&#128200;</div>
+      <div>
+        <p class="feature-title">Built for agencies &amp; SMEs</p>
+        <p class="feature-desc">Subscription tiers designed for high-volume content teams across SEA markets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="section" id="integrations">
+  <p class="section-label">Integrations</p>
+  <h2 class="section-title">Powered by the best models</h2>
+  <p class="feature-desc">CrystalCastle connects to leading AI APIs so you always use the most capable model available.</p>
+  <div class="integrations">
+    <span class="int-badge">Groq</span>
+    <span class="int-badge">FAL.ai</span>
+    <span class="int-badge">RunwayML</span>
+    <span class="int-badge">Pika Labs</span>
+    <span class="int-badge">Magic Hour</span>
+    <span class="int-badge">Wavespeed</span>
+    <span class="int-badge">Gemini</span>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <p class="section-label">Pricing</p>
+  <h2 class="section-title">Simple, transparent pricing</h2>
+  <p class="section-sub">Scale your creative output without scaling your team. All plans include the full pipeline.</p>
+
+  <div class="toggle-row">
+    <span class="toggle-label active" id="lbl-monthly" onclick="toggleBilling()">Monthly</span>
+    <div class="toggle-track" id="billing-toggle" onclick="toggleBilling()">
+      <div class="toggle-thumb"></div>
+    </div>
+    <span class="toggle-label" id="lbl-yearly" onclick="toggleBilling()">Yearly</span>
+    <span class="save-badge">Save 20%</span>
+  </div>
+
+  <div class="plans">
+
+    <!-- Starter -->
+    <div class="plan-card">
+      <div class="plan-top">
+        <div>
+          <p class="plan-name">Starter</p>
+          <p class="plan-desc">For solo creators &amp;<br>small teams testing the pipeline.</p>
+        </div>
+        <div class="plan-price">
+          <div class="price-amt" id="price-starter">$29<span>/mo</span></div>
+          <div class="price-orig" id="orig-starter">$36/mo</div>
+        </div>
+      </div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="check-orange">&#10003;</span>50 video generations / month</li>
+        <li><span class="check-orange">&#10003;</span>Access to Groq + FAL models</li>
+        <li><span class="check-orange">&#10003;</span>720p output resolution</li>
+        <li><span class="check-orange">&#10003;</span>Email support</li>
+        <li><span class="check-gray">&#10005;</span><span style="opacity:0.5">Custom branding</span></li>
+        <li><span class="check-gray">&#10005;</span><span style="opacity:0.5">API access</span></li>
+      </ul>
+      <a href="#waitlist" class="plan-btn">Get started</a>
+    </div>
+
+    <!-- Pro -->
+    <div class="plan-card featured">
+      <div class="popular-badge">Most popular</div>
+      <div class="plan-top">
+        <div>
+          <p class="plan-name">Pro</p>
+          <p class="plan-desc">For agencies &amp; content teams<br>at scale across SEA markets.</p>
+        </div>
+        <div class="plan-price">
+          <div class="price-amt" id="price-pro">$79<span>/mo</span></div>
+          <div class="price-orig" id="orig-pro">$99/mo</div>
+        </div>
+      </div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="check-orange">&#10003;</span>250 video generations / month</li>
+        <li><span class="check-orange">&#10003;</span>All 7 AI models (RunwayML, Pika, Magic Hour…)</li>
+        <li><span class="check-orange">&#10003;</span>1080p + 4K output</li>
+        <li><span class="check-orange">&#10003;</span>Custom branding overlays</li>
+        <li><span class="check-orange">&#10003;</span>API access + webhooks</li>
+        <li><span class="check-orange">&#10003;</span>Priority support (LINE / Slack)</li>
+      </ul>
+      <a href="#waitlist" class="plan-btn primary">Start free trial</a>
+    </div>
+
+  </div>
+
+  <!-- Enterprise -->
+  <div class="enterprise-note">
+    <span class="ent-icon">&#127970;</span>
+    <div>
+      <p class="ent-title">Enterprise</p>
+      <p class="ent-desc">Unlimited generations, dedicated infra, SLA, and white-label options for large organizations.</p>
+      <a href="mailto:hello@zyntromedia.ai" class="ent-link">Talk to us →</a>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST / CTA -->
+<section class="cta-section" id="waitlist">
+  <h2 class="cta-title">Join the waitlist</h2>
+  <p class="cta-sub">Early access is open. Be the first to build with the full CrystalCastle pipeline.</p>
+  <div class="waitlist-row" id="waitlist-form">
+    <input type="email" id="email-input" placeholder="your@email.com" />
+    <button class="waitlist-btn" onclick="handleJoin()">Join</button>
+  </div>
+  <p class="thanks-msg" id="thanks-msg">✓ You're on the list. We'll be in touch soon.</p>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-logo">CrystalCastle AI</span>
+  <span class="footer-copy">© 2026 Zyntro Media AI</span>
+</footer>
+
+<script>
+  var isYearly = false;
+
+  function toggleBilling() {
+    isYearly = !isYearly;
+    var track = document.getElementById('billing-toggle');
+    var lblM  = document.getElementById('lbl-monthly');
+    var lblY  = document.getElementById('lbl-yearly');
+
+    if (isYearly) {
+      track.classList.add('yearly');
+      lblM.classList.remove('active');
+      lblY.classList.add('active');
+    } else {
+      track.classList.remove('yearly');
+      lblM.classList.add('active');
+      lblY.classList.remove('active');
+    }
+
+    var ps = isYearly ? '$23' : '$29';
+    var pp = isYearly ? '$63' : '$79';
+
+    document.getElementById('price-starter').innerHTML = ps + '<span>/mo</span>';
+    document.getElementById('price-pro').innerHTML     = pp + '<span>/mo</span>';
+    document.getElementById('orig-starter').style.display = isYearly ? 'block' : 'none';
+    document.getElementById('orig-pro').style.display     = isYearly ? 'block' : 'none';
+  }
+
+  function handleJoin() {
+    var email = document.getElementById('email-input').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('email-input').style.borderColor = '#d97757';
+      return;
+    }
+    document.getElementById('waitlist-form').style.display = 'none';
+    document.getElementById('thanks-msg').style.display    = 'block';
+  }
+</script>
+
+</body>
+</html>
