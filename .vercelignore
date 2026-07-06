@@ -6,15 +6,29 @@
 tests/
 coverage/
 
-# Local env
+# Local environment
 .env.local
 .env.development
+.env.test
 
 # Build artifacts
 node_modules/
 dist/
-tmp/
+out/
+.tmp/
+.cache/
 
-# Docs not needed in production
+# Framework-specific build outputs
+.next/
+.vercel/
+.nuxt/
+.astro/
+
+# Docs and drafts not needed in production
 docs/
 *.md
+*.pdf
+
+# Miscellaneous
+.vscode/
+.idea/
