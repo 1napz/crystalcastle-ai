@@ -1,7 +1,11 @@
 {
   "recommendations": [
-    "davidanson.vscode-markdownlint",
-    "esbenp.prettier-vscode",
-    "ms-python.vscode-pylance",
-  ],
+    "davidanson.vscode-markdownlint",   // Markdown formatting and linting
+    "esbenp.prettier-vscode",           // Code formatting consistency
+    "ms-python.vscode-pylance",         // Python language support
+    "ms-vscode.vscode-typescript-next", // Latest TypeScript features
+    "eamodio.gitlens",                  // Git insights and history
+    "streetsidesoftware.code-spell-checker", // Spell checking for docs and code
+    "ms-azuretools.vscode-docker"       // Docker integration for containerized apps
+  ]
 }
