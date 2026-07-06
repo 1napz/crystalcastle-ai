@@ -1,63 +1,51 @@
-# =========================
 # Dependencies
-# =========================
 node_modules/
-.pnpm-store/
+pnpm-store/
+.yarn/
 
-# =========================
 # Build outputs
-# =========================
 .next/
 out/
 dist/
 build/
 .vercel/
+.cache/
 
-# =========================
 # Environment variables
-# =========================
-.env
-.env.*
-!.env.example
-.env.local
-.env.production
-node_modules
-.next
-dist
-# =========================
+.env*
+!.env.example  # Keep example env for reference
+
 # IDE / OS
-# =========================
 .vscode/
 .idea/
 *.swp
 *.swo
 .DS_Store
+Thumbs.db
 
-# =========================
 # Logs
-# =========================
 *.log
 npm-debug.log*
 yarn-debug.log*
+pnpm-debug.log*
 
-# =========================
 # Coverage / Reports
-# =========================
 coverage/
-.nyc_output
+*.nyc_output
 
-# =========================
 # Temp files
-# =========================
 tmp/
 temp/
 *.tmp
 
-# =========================
 # Local mocks only
-# =========================
 mocks/local/
-mocks/tmp/
+mocks/temp/
 
+# Docker
+docker-compose.override.yml
+.dockerignore
 
-   
+# Miscellaneous
+*.bak
+*.old
