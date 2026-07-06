@@ -38,3 +38,9 @@ suggest best value :
     "typescript": "^5"
   }
 }
+| Package | Purpose |  
+|---|---|  
+| **`@azure-rest/ai-inference`** | The Azure AI Inference REST client library — used to call Azure-hosted AI models (like GPT-4, Llama, Mistral, etc.) via their REST API. You send prompts, get completions. |  
+| **`@azure/core-auth`** | Core authentication utilities from Azure — provides credential types (e.g., API keys, token credentials) needed to authenticate requests to Azure services. |  
+| **`@azure/core-sse`** | Azure's **Server-Sent Events** (SSE) client library — handles streaming responses from Azure APIs so you can receive AI output token-by-token (real-time streaming) instead of waiting for the full response. |  
+
