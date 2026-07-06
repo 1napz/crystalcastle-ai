@@ -1,99 +1,51 @@
 // app/dashboard/page.tsx
-
-import Link from 'next/link'
+import { Suspense } from "react";
+import { getSession } from "@auth0/nextjs-auth0";
+import { notFound } from "next/navigation";
 
 async function getData() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/data`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Failed to fetch dashboard data");
+  return res.json();
+}
+
+export default async function DashboardPage() {
+  const session = await getSession();
+  if (!session?.user) return notFound();
+
+  return (
+    <main className="p-6">
+      <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
+      <Suspense fallback={<Loading />}>
+        <DashboardContent />
+      </Suspense>
+    </main>
+  );
+}
+
+async function DashboardContent() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/devops`, {
-      cache: 'no-store',
-    })
-
-    if (!res.ok) {
-      throw new Error('Failed to fetch DevOps data')
-    }
-
-    return res.json()
-  } catch (err) {
-    return null
-  }
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const color =
-    status === 'success' || status === 'READY'
-      ? 'green'
-      : status === 'failure' || status === 'ERROR'
-      ? 'red'
-      : 'orange'
-
-  return (
-    <span style={{ color, fontWeight: 'bold' }}>
-      {status}
-    </span>
-  )
-}
-
-export default async function Dashboard() {
-  const data = await getData()
-
-  if (!data) {
+    const data = await getData();
     return (
-      <div style={{ padding: 20 }}>
-        ❌ Failed to load DevOps data
+      <pre className="bg-gray-900 text-green-400 p-4 rounded-md overflow-auto">
+        {JSON.stringify(data, null, 2)}
+      </pre>
+    );
+  } catch (error) {
+    return (
+      <div className="text-red-500 font-medium">
+        ⚠️ Error loading dashboard data. Please try again later.
       </div>
-    )
+    );
   }
+}
 
+function Loading() {
   return (
-    <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
-      <h1>🚀 DevOps Dashboard</h1>
-
-      {/* CI */}
-      <section>
-        <h2>CI Status</h2>
-        <StatusBadge status={data.ci.status} />
-        <p>{data.ci.commit}</p>
-        <p>Branch: {data.ci.branch}</p>
-        <p>Success Rate: {data.ci.successRate}%</p>
-
-        {data.ci.url && (
-          <Link href={data.ci.url} target="_blank">
-            View CI Run →
-          </Link>
-        )}
-      </section>
-
-      <hr />
-
-      {/* Vercel */}
-      <section>
-        <h2>Deployment</h2>
-        <StatusBadge status={data.vercel.status} />
-
-        {data.vercel.url && (
-          <p>
-            <Link href={data.vercel.url} target="_blank">
-              Open Deployment →
-            </Link>
-          </p>
-        )}
-      </section>
-
-      <hr />
-
-      {/* PR */}
-      <section>
-        <h2>Open PRs</h2>
-        <ul>
-          {data.prs.map((pr: any) => (
-            <li key={pr.id}>
-              <Link href={pr.url} target="_blank">
-                #{pr.number} - {pr.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+    <div className="animate-pulse text-gray-400">
+      Loading dashboard data...
     </div>
-  )
+  );
 }
